@@ -1,0 +1,6 @@
+name: HikariLib
+version: '1.0.0'
+main: me.eventually.hikarilib.HikariLib
+api-version: '1.20'
+load: STARTUP
+authors: [ Eventually ]
