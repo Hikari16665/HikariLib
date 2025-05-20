@@ -1,13 +1,20 @@
 package me.eventually.hikarilib.itemstack;
 
 import lombok.Getter;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.profile.PlayerProfile;
+import org.bukkit.profile.PlayerTextures;
 import org.jetbrains.annotations.NotNull;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.function.Function;
 
 /**
@@ -109,7 +116,6 @@ public class HikariItemStack {
             return meta;
         });
     }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -120,7 +126,6 @@ public class HikariItemStack {
     public int hashCode() {
         return wrapped.hashCode();
     }
-
     public static class Builder {
         private final Material material;
         private final int amount;
@@ -136,5 +141,19 @@ public class HikariItemStack {
         public HikariItemStack build() {
             return new HikariItemStack(material, amount).setName(name).setLore(lore);
         }
+    }
+    public static HikariItemStack getSkull(String uuid, String name, List<String> lore) {
+        HikariItemStack stack = new Builder(Material.PLAYER_HEAD, 1, name, lore).build();
+        SkullMeta meta = (SkullMeta) stack.getItemMeta();
+        PlayerProfile profile = Bukkit.createPlayerProfile("SKULL_CONTAINER_" + uuid.toUpperCase());
+        try {
+            profile.getTextures().setSkin(
+                    new URL("http://textures.minecraft.net/texture/" + uuid)
+            );
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
+        meta.setOwnerProfile(profile);
+        return stack.setItemMeta(meta);
     }
 }
