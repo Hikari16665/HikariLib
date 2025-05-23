@@ -145,7 +145,7 @@ public class HikariItemStack {
     public static HikariItemStack getSkull(String uuid, String name, List<String> lore) {
         HikariItemStack stack = new Builder(Material.PLAYER_HEAD, 1, name, lore).build();
         SkullMeta meta = (SkullMeta) stack.getItemMeta();
-        PlayerProfile profile = Bukkit.createPlayerProfile("SKULL_CONTAINER_" + uuid.toUpperCase());
+        PlayerProfile profile = Bukkit.createPlayerProfile("HikariLib");
         try {
             profile.getTextures().setSkin(
                     new URL("http://textures.minecraft.net/texture/" + uuid)
