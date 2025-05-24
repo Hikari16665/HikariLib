@@ -7,14 +7,12 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.profile.PlayerProfile;
-import org.bukkit.profile.PlayerTextures;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import java.util.function.Function;
 
 /**
@@ -22,8 +20,11 @@ import java.util.function.Function;
  * @author Eventually
  */
 @Getter
+@SuppressWarnings("unused")
 public class HikariItemStack {
     private final ItemStack wrapped;
+
+    private static String SKULL_NAME = "HikariLib";
     public HikariItemStack(@NotNull Material material) {
         if (!material.isItem()) {
             throw new IllegalArgumentException("Material is not an item");
@@ -38,6 +39,10 @@ public class HikariItemStack {
     }
     public HikariItemStack(ItemStack itemStack) {
         this.wrapped = itemStack;
+    }
+
+    public static void setSkullProfileName(String profileName) {
+        SKULL_NAME = profileName;
     }
     public ItemStack getItem() {
         return wrapped;
@@ -145,7 +150,7 @@ public class HikariItemStack {
     public static HikariItemStack getSkull(String uuid, String name, List<String> lore) {
         HikariItemStack stack = new Builder(Material.PLAYER_HEAD, 1, name, lore).build();
         SkullMeta meta = (SkullMeta) stack.getItemMeta();
-        PlayerProfile profile = Bukkit.createPlayerProfile("HikariLib");
+        PlayerProfile profile = Bukkit.createPlayerProfile(SKULL_NAME);
         try {
             profile.getTextures().setSkin(
                     new URL("http://textures.minecraft.net/texture/" + uuid)
