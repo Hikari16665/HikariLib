@@ -7,14 +7,15 @@ public final class HikariLib extends JavaPlugin {
 
     @Override
     public void onLoad() {
+        getLogger().info("HikariLib is loading...");
+        getLogger().info("Loading Modules...");
+        PregenerateStacks.pregenStacks();
+        getLogger().info("Modules loaded.");
     }
 
     @Override
     public void onEnable() {
-        getLogger().info("HikariLib is loading...");
-        getLogger().info("Loading Modules");
-        PregenerateStacks.pregenStacks();
-        getLogger().info("Modules loaded");
+        getLogger().info("HikariLib is enabled!");
     }
 
     @Override

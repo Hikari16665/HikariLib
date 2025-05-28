@@ -7,6 +7,8 @@ import org.bukkit.Material;
 @Data
 @SuppressWarnings("deprecated")
 public class PregenerateStacks {
+    private PregenerateStacks() {}
+
     public static HikariItemStack AIR;
     public static HikariItemStack STONE;
     public static HikariItemStack GRANITE;
