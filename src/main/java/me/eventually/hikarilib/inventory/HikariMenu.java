@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @Getter @Setter
-public class HikariMenu extends HikariMenuInventoryHolder{
+public class HikariMenu extends HikariMenuInventoryHolder {
     private Inventory inventory;
     private String title = "";
     private int rows = -1;
@@ -74,7 +74,7 @@ public class HikariMenu extends HikariMenuInventoryHolder{
 
     @Override
     public HikariMenuItemStack getItem(int slot) {
-        return null;
+        return items.get(slot);
     }
 
     public void open(Player player) {

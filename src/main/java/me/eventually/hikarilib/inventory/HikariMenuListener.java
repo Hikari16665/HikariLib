@@ -13,7 +13,7 @@ public class HikariMenuListener implements Listener {
     public void onInventoryClick(@NotNull InventoryClickEvent event) {
         if (event.getInventory().getHolder() instanceof HikariMenu menu) {
             HikariMenuItemStack item = menu.getItem(event.getSlot());
-            if (item != null && item.getClickHandler() != null) {
+            if (item != null) {
                 item.getClickHandler().onClick(event, event.getSlot(), menu);
             }
         }
