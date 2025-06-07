@@ -3,4 +3,5 @@ version: '1.0.0'
 main: me.eventually.hikarilib.HikariLib
 api-version: '1.21'
 load: STARTUP
+folia-supported: true
 authors: [ Eventually ]

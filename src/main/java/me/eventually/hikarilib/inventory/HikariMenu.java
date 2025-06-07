@@ -2,6 +2,8 @@ package me.eventually.hikarilib.inventory;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
+import me.eventually.hikarilib.entity.EntityUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -13,7 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Getter
+@Getter @Setter
 public class HikariMenu extends HikariMenuInventoryHolder{
     private Inventory inventory;
     private String title = "";
@@ -28,11 +30,8 @@ public class HikariMenu extends HikariMenuInventoryHolder{
         plugin.getServer().getPluginManager().registerEvents(new HikariMenuListener(), plugin);
     }
 
-    private HikariMenu() {
-        items = new HashMap<>();
-        drawer.draw(this);
-    }
 
+    @Builder
     private HikariMenu(String title, int rows, HikariMenuOpenHandler openHandler, HikariMenuCloseHandler closeHandler, HikariMenuDrawer drawer) {
         this.title = title;
         this.rows = rows;
@@ -57,7 +56,7 @@ public class HikariMenu extends HikariMenuInventoryHolder{
         items.put(slot, item);
         inventory.setItem(slot, item == null ? null : item.getItemStack());
         for (Player player : getViewers()) {
-            player.updateInventory();
+            EntityUtil.runAsEntity(player, () -> player.openInventory(inventory));
         }
     }
 
@@ -82,16 +81,7 @@ public class HikariMenu extends HikariMenuInventoryHolder{
         return null;
     }
 
-    @Builder
-    public static class MenuBuilder {
-        private String title;
-        private int rows;
-        private HikariMenuOpenHandler openHandler;
-        private HikariMenuCloseHandler closeHandler;
-        private HikariMenuDrawer drawer;
-
-        public HikariMenu build() {
-            return new HikariMenu(title, rows, openHandler, closeHandler, drawer);
-        }
+    public void open(Player player) {
+        EntityUtil.runAsEntity(player, () -> player.openInventory(inventory));
     }
 }
