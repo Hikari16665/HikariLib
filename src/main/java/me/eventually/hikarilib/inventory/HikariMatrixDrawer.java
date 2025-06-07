@@ -1,5 +1,6 @@
 package me.eventually.hikarilib.inventory;
 
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.awt.*;
@@ -86,6 +87,42 @@ public class HikariMatrixDrawer implements HikariMenuDrawer {
                     menu.setItem(i * 9 + j, null);
                 }
             }
+        }
+    }
+    public static class Builder {
+        private String title = "";
+        private int rows = -1;
+        private HikariMenuDrawer drawer;
+        private HikariMenuOpenHandler openHandler = HikariMenuOpenHandler.DEFAULT;
+        private HikariMenuCloseHandler closeHandler = HikariMenuCloseHandler.DEFAULT;
+
+        public Builder withTitle(String title) {
+            this.title = title;
+            return this;
+        }
+
+        public Builder withRows(int rows) {
+            this.rows = rows;
+            return this;
+        }
+
+        public Builder withDrawer(HikariMenuDrawer drawer) {
+            this.drawer = drawer;
+            return this;
+        }
+
+        public Builder withOpenHandler(HikariMenuOpenHandler openHandler) {
+            this.openHandler = openHandler;
+            return this;
+        }
+
+        public Builder withCloseHandler(HikariMenuCloseHandler closeHandler) {
+            this.closeHandler = closeHandler;
+            return this;
+        }
+
+        public HikariMenu build() {
+            return new HikariMenu(title, rows, openHandler, closeHandler, drawer);
         }
     }
 }

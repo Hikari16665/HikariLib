@@ -8,9 +8,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
-
-import javax.swing.event.MenuListener;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,8 +28,7 @@ public class HikariMenu extends HikariMenuInventoryHolder{
     }
 
 
-    @Builder
-    private HikariMenu(String title, int rows, HikariMenuOpenHandler openHandler, HikariMenuCloseHandler closeHandler, HikariMenuDrawer drawer) {
+    HikariMenu(String title, int rows, HikariMenuOpenHandler openHandler, HikariMenuCloseHandler closeHandler, HikariMenuDrawer drawer) {
         this.title = title;
         this.rows = rows;
         this.openHandler = openHandler;
