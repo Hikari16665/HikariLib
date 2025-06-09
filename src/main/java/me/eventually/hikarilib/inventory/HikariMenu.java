@@ -8,6 +8,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,12 +25,12 @@ public class HikariMenu extends HikariMenuInventoryHolder {
 
     private Map<Integer, HikariMenuItemStack> items = new HashMap<>();
 
-    public static void setupListeners(JavaPlugin plugin) {
+    public static void setupListeners(@NotNull JavaPlugin plugin) {
         plugin.getServer().getPluginManager().registerEvents(new HikariMenuListener(), plugin);
     }
 
 
-    HikariMenu(String title, int rows, HikariMenuOpenHandler openHandler, HikariMenuCloseHandler closeHandler, HikariMenuDrawer drawer) {
+    HikariMenu(String title, int rows, HikariMenuOpenHandler openHandler, HikariMenuCloseHandler closeHandler, @NotNull HikariMenuDrawer drawer) {
         this.title = title;
         this.rows = rows;
         this.openHandler = openHandler;

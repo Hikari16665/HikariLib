@@ -25,17 +25,14 @@ public class HikariFoliaScheduler {
         if (initialized) {
             return;
         }
-        currentTime = System.currentTimeMillis();
-        currentTimeAsync = System.currentTimeMillis();
         Server server = HikariLib.getInstance().getServer();
         schedulerGlobal = server.getGlobalRegionScheduler();
         schedulerAsync = server.getAsyncScheduler();
         schedulerGlobal.runAtFixedRate(HikariLib.getInstance(), (task) -> {
             currentTime++;
             timedTasks.removeIf(entry -> {
-                long nextTime = entry.runTime;
                 if (entry.scheduler != TaskScheduler.SYNC) return false;
-                if (nextTime <= currentTime) {
+                if (entry.runTime <= currentTime) {
                     entry.runnable.run();
                     if (entry.period > 0) {
                         entry.runTime = currentTime + entry.period;
@@ -45,7 +42,7 @@ public class HikariFoliaScheduler {
                 }
                 return false;
             });
-        }, 0L, 1L);
+        }, 1L, 1L);
         schedulerAsync.runAtFixedRate(HikariLib.getInstance(), (task) -> {
             currentTimeAsync = System.currentTimeMillis();
             timedTasks.removeIf(entry -> {
@@ -60,7 +57,7 @@ public class HikariFoliaScheduler {
                 }
                 return false;
             });
-        },  0L, TICK_PERIOD, TimeUnit.MILLISECONDS);
+        },  1L, TICK_PERIOD, TimeUnit.MILLISECONDS);
         initialized = true;
     }
 
@@ -90,7 +87,7 @@ public class HikariFoliaScheduler {
 
         public TaskEntry(TaskScheduler scheduler, long runTime, long period, Runnable runnable) {
             this.scheduler = scheduler;
-            this.runTime = currentTime + runTime * TICK_PERIOD;
+            this.runTime = runTime;
             this.period = period;
             this.runnable = runnable;
         }
@@ -101,7 +98,7 @@ public class HikariFoliaScheduler {
         timedTasks.add(
                 new TaskEntry(
                         async ? TaskScheduler.ASYNC : TaskScheduler.SYNC,
-                        currentTime + delay * TICK_PERIOD,
+                        currentTime + delay,
                         runnable
                 )
         );
@@ -112,8 +109,8 @@ public class HikariFoliaScheduler {
         timedTasks.add(
                 new TaskEntry(
                         async ? TaskScheduler.ASYNC : TaskScheduler.SYNC,
-                        currentTime + period * TICK_PERIOD,
-                        period * TICK_PERIOD,
+                        currentTime + period,
+                        period,
                         runnable
                 )
         );

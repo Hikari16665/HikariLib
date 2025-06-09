@@ -2,10 +2,8 @@ package me.eventually.hikarilib.inventory;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryOpenEvent;
 
-import java.awt.*;
-
+@FunctionalInterface
 public interface HikariMenuCloseHandler {
     void onClose(InventoryCloseEvent event, Player player, HikariMenu menu);
 
