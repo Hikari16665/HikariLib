@@ -1,9 +1,7 @@
 package me.eventually.hikarilib.inventory;
 
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

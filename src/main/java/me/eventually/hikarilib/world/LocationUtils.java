@@ -40,6 +40,13 @@ public class LocationUtils {
         return teleportPlayer(player, location, false);
     }
 
+    /**
+     * Teleports a player to a location. Always async if Folia is used
+     * @param player the player to teleport
+     * @param location to teleport to
+     * @param async whether to teleport asynchronously
+     * @return true if the teleport was successful, false otherwise
+     */
     public static boolean teleportPlayer(Player player, Location location, boolean async) {
         AtomicBoolean teleported = new AtomicBoolean(false);
         if (ServerEnvironment.isFolia()) {
