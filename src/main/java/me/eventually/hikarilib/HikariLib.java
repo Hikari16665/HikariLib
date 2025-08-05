@@ -15,7 +15,6 @@ public final class HikariLib extends JavaPlugin {
         Banner.printBanner(getLogger());
         getLogger().info("HikariLib is loading...");
         getLogger().info("Loading Modules (Part 1/2)...");
-        getLogger().info("Modules loaded Part 1.");
     }
 
     @Override
