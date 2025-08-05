@@ -15,6 +15,11 @@ public class HikariBukkitScheduler {
     private static final int TICK_PERIOD = 50;
 
     private static final CopyOnWriteArrayList<TaskEntry> tasks = new CopyOnWriteArrayList<>();
+    private static int identifier;
+
+    public static void cancelTask(int id) {
+        tasks.removeIf(task -> task.id == id);
+    }
 
     enum TaskScheduler {
         SYNC,
@@ -26,16 +31,18 @@ public class HikariBukkitScheduler {
         long nextTime;
         protected final long period;
         protected final Runnable runnable;
+        protected final int id;
 
-        TaskEntry(TaskScheduler scheduler, long nextTime, long period, Runnable runnable) {
+        TaskEntry(TaskScheduler scheduler, long nextTime, long period, Runnable runnable, int id) {
             this.nextTime = nextTime;
             this.period = period;
             this.runnable = runnable;
             this.scheduler = scheduler;
+            this.id = id;
         }
 
-        TaskEntry(TaskScheduler scheduler, long nextTime, Runnable runnable) {
-             this(scheduler, nextTime, -1, runnable);
+        TaskEntry(TaskScheduler scheduler, long nextTime, Runnable runnable, int id) {
+             this(scheduler, nextTime, -1, runnable, id);
         }
     }
 
@@ -102,19 +109,22 @@ public class HikariBukkitScheduler {
                 new TaskEntry(
                         async ? TaskScheduler.ASYNC : TaskScheduler.SYNC,
                         currentTime + delay * TICK_PERIOD,
-                        runnable
+                        runnable,
+                        identifier
                 )
         );
     }
 
     public static void addRepeatingTask(long period, Runnable runnable, boolean async) {
         if (period <= 0) throw new IllegalArgumentException("Period must be positive.");
+        identifier++;
         tasks.add(
                 new TaskEntry(
                         async ? TaskScheduler.ASYNC : TaskScheduler.SYNC,
                         currentTime + period * TICK_PERIOD,
                         period * TICK_PERIOD,
-                        runnable
+                        runnable,
+                        identifier
                 )
         );
     }

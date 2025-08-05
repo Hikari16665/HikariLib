@@ -40,4 +40,5 @@ public class HikariScheduler {
             HikariBukkitScheduler.shutdown();
         }
     }
+
 }

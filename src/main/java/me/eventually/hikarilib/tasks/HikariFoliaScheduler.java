@@ -13,6 +13,8 @@ public class HikariFoliaScheduler {
     private static GlobalRegionScheduler schedulerGlobal;
     private static AsyncScheduler schedulerAsync;
 
+    private static int identifier;
+
     private static final CopyOnWriteArrayList<TaskEntry> timedTasks = new CopyOnWriteArrayList<>();
 
     private static long currentTime = 0L;
@@ -79,39 +81,45 @@ public class HikariFoliaScheduler {
         long runTime;
         long period;
         Runnable runnable;
+        int id;
 
-        public TaskEntry(TaskScheduler scheduler, long runTime, Runnable runnable) {
-            this(scheduler, runTime, -1, runnable);
+        public TaskEntry(TaskScheduler scheduler, long runTime, Runnable runnable, int id) {
+            this(scheduler, runTime, -1, runnable, id);
         }
 
 
-        public TaskEntry(TaskScheduler scheduler, long runTime, long period, Runnable runnable) {
+        public TaskEntry(TaskScheduler scheduler, long runTime, long period, Runnable runnable, int id) {
             this.scheduler = scheduler;
             this.runTime = runTime;
             this.period = period;
             this.runnable = runnable;
+            this.id = id;
         }
     }
 
     public static void addTimedTask(long delay, Runnable runnable, boolean async) {
         if (delay < 0) throw new IllegalArgumentException("Delay must be positive or zero.");
+        identifier++;
         timedTasks.add(
                 new TaskEntry(
                         async ? TaskScheduler.ASYNC : TaskScheduler.SYNC,
                         currentTime + delay,
-                        runnable
+                        runnable,
+                        identifier
                 )
         );
     }
 
     public static void addRepeatingTask(long period, Runnable runnable, boolean async) {
         if (period <= 0) throw new IllegalArgumentException("Period must be positive.");
+        identifier++;
         timedTasks.add(
                 new TaskEntry(
                         async ? TaskScheduler.ASYNC : TaskScheduler.SYNC,
                         currentTime + period,
                         period,
-                        runnable
+                        runnable,
+                        identifier
                 )
         );
     }
