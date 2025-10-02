@@ -1,6 +1,8 @@
 package me.eventually.hikarilib.itemstack;
 
 import lombok.Getter;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -11,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -68,12 +71,13 @@ public class HikariItemStack {
         }
         return Optional.ofNullable(meta.getLore());
     }
-    public HikariItemStack setLore(List<String> lore) {
+
+    public HikariItemStack setLore(List<TextComponent> lore) {
         ItemMeta meta = wrapped.getItemMeta();
         if (meta == null) {
             return this;
         }
-        meta.setLore(lore);
+        meta.lore(lore);
         wrapped.setItemMeta(meta);
         return this;
     }
@@ -83,7 +87,7 @@ public class HikariItemStack {
         if (meta == null) {
             return this;
         }
-        meta.setLore(null);
+        meta.lore(new ArrayList<>());
         wrapped.setItemMeta(meta);
         return this;
     }
@@ -148,16 +152,16 @@ public class HikariItemStack {
         private final Material material;
         private final int amount;
         private final String name;
-        private final List<String> lore;
+        private final List<TextComponent> components;
 
         public Builder(Material material, int amount, String name, List<String> lore) {
             this.material = material;
             this.amount = amount;
             this.name = name;
-            this.lore = lore;
+            this.components = lore.stream().map(Component::text).toList();
         }
         public HikariItemStack build() {
-            return new HikariItemStack(material, amount).setName(name).setLore(lore);
+            return new HikariItemStack(material, amount).setName(name).setLore(components);
         }
     }
     public static HikariItemStack getSkull(String uuid, String name, List<String> lore) {
