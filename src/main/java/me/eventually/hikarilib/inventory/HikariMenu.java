@@ -1,6 +1,5 @@
 package me.eventually.hikarilib.inventory;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import me.eventually.hikarilib.entity.EntityUtil;
@@ -30,7 +29,7 @@ public class HikariMenu extends HikariMenuInventoryHolder {
     }
 
 
-    HikariMenu(String title, int rows, HikariMenuOpenHandler openHandler, HikariMenuCloseHandler closeHandler, @NotNull HikariMenuDrawer drawer) {
+    public HikariMenu(String title, int rows, HikariMenuOpenHandler openHandler, HikariMenuCloseHandler closeHandler, @NotNull HikariMenuDrawer drawer) {
         this.title = title;
         this.rows = rows;
         this.openHandler = openHandler;
