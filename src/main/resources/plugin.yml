@@ -1,7 +1,7 @@
 name: HikariLib
-version: '1.2.1'
+version: '1.3.0'
 main: me.eventually.hikarilib.HikariLib
-api-version: '1.20'
+api-version: '1.21'
 load: STARTUP
 folia-supported: true
 authors: [ Eventually ]

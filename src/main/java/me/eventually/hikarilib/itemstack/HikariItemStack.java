@@ -72,12 +72,30 @@ public class HikariItemStack {
         return Optional.ofNullable(meta.getLore());
     }
 
-    public HikariItemStack setLore(List<TextComponent> lore) {
+    public List<? extends Component> getComponentLore() {
+        ItemMeta meta = wrapped.getItemMeta();
+        if (meta == null) {
+            return new ArrayList<>();
+        }
+        return meta.lore();
+    }
+
+    HikariItemStack setComponentLore(List<? extends Component> lore) {
         ItemMeta meta = wrapped.getItemMeta();
         if (meta == null) {
             return this;
         }
         meta.lore(lore);
+        wrapped.setItemMeta(meta);
+        return this;
+    }
+
+    HikariItemStack setLore(List<String> lore) {
+        ItemMeta meta = wrapped.getItemMeta();
+        if (meta == null) {
+            return this;
+        }
+        meta.lore(lore.stream().map(Component::text).toList());
         wrapped.setItemMeta(meta);
         return this;
     }
@@ -103,6 +121,15 @@ public class HikariItemStack {
         }
         return Optional.of(meta.getDisplayName());
     }
+
+    public Component getComponentName() {
+        ItemMeta meta = wrapped.getItemMeta();
+        if (meta == null) {
+            return Component.empty();
+        }
+        return meta.displayName();
+    }
+
     public Optional<Integer> getCustomModelData() {
         ItemMeta meta = wrapped.getItemMeta();
         if (meta == null) {
@@ -113,6 +140,12 @@ public class HikariItemStack {
     public HikariItemStack setName(String name) {
         return editItemMeta(meta -> {
             meta.setDisplayName(name);
+            return meta;
+        });
+    }
+    public HikariItemStack setComponentName(Component name) {
+        return editItemMeta(meta -> {
+            meta.displayName(name);
             return meta;
         });
     }
@@ -133,6 +166,12 @@ public class HikariItemStack {
     public HikariItemStack editLore(Function<List<String>, List<String>> function) {
         return editItemMeta(meta -> {
             meta.setLore(function.apply(meta.getLore()));
+            return meta;
+        });
+    }
+    public HikariItemStack editComponentLore(Function<List<? extends Component>, List<? extends Component>> function) {
+        return editItemMeta(meta -> {
+            meta.lore(function.apply(meta.lore()));
             return meta;
         });
     }
@@ -161,23 +200,23 @@ public class HikariItemStack {
             this.components = lore.stream().map(Component::text).toList();
         }
         public HikariItemStack build() {
-            return new HikariItemStack(material, amount).setName(name).setLore(components);
+            return new HikariItemStack(material, amount).setName(name).setComponentLore(components);
         }
     }
     public static class ComponentBuilder {
         private final Material material;
         private final int amount;
         private final String name;
-        private final List<TextComponent> components;
+        private final List<? extends Component> components;
 
-        public ComponentBuilder(Material material, int amount, String name, List<TextComponent> components) {
+        public ComponentBuilder(Material material, int amount, String name, List<? extends Component> components) {
             this.material = material;
             this.amount = amount;
             this.name = name;
             this.components = components;
         }
         public HikariItemStack build() {
-            return new HikariItemStack(material, amount).setName(name).setLore(components);
+            return new HikariItemStack(material, amount).setName(name).setComponentLore(components);
         }
     }
     public static HikariItemStack getSkull(String uuid, String name, List<String> lore) {
