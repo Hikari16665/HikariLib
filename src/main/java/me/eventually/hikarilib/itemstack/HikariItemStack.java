@@ -164,6 +164,22 @@ public class HikariItemStack {
             return new HikariItemStack(material, amount).setName(name).setLore(components);
         }
     }
+    public static class ComponentBuilder {
+        private final Material material;
+        private final int amount;
+        private final String name;
+        private final List<TextComponent> components;
+
+        public ComponentBuilder(Material material, int amount, String name, List<TextComponent> components) {
+            this.material = material;
+            this.amount = amount;
+            this.name = name;
+            this.components = components;
+        }
+        public HikariItemStack build() {
+            return new HikariItemStack(material, amount).setName(name).setLore(components);
+        }
+    }
     public static HikariItemStack getSkull(String uuid, String name, List<String> lore) {
         HikariItemStack stack = new Builder(Material.PLAYER_HEAD, 1, name, lore).build();
         SkullMeta meta = (SkullMeta) stack.getItemMeta();
