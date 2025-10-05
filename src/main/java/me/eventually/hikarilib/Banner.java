@@ -1,6 +1,13 @@
+/**
+ * @Author: Eventually contact@hikari.bond
+ * @Date: 2025-06-07 13:37:24
+ * @LastEditors: Eventually contact@hikari.bond
+ * @LastEditTime: 2025-10-04 11:37:46
+ * @FilePath: src/main/java/me/eventually/hikarilib/Banner.java
+ * @Description: This file is licensed under MIT license
+ */
 package me.eventually.hikarilib;
 
-import java.util.List;
 import java.util.logging.Logger;
 
 public class Banner {

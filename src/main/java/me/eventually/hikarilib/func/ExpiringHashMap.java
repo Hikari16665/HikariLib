@@ -1,3 +1,11 @@
+/**
+ * @Author: Eventually contact@hikari.bond
+ * @Date: 2025-06-28 20:12:49
+ * @LastEditors: Eventually contact@hikari.bond
+ * @LastEditTime: 2025-10-04 00:19:51
+ * @FilePath: src/main/java/me/eventually/hikarilib/func/ExpiringHashMap.java
+ * @Description: This file is licensed under MIT license
+ */
 package me.eventually.hikarilib.func;
 
 import org.jetbrains.annotations.NotNull;

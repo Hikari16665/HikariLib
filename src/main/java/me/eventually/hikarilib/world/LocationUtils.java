@@ -1,3 +1,11 @@
+/**
+ * @Author: Eventually contact@hikari.bond
+ * @Date: 2025-05-28 22:35:13
+ * @LastEditors: Eventually contact@hikari.bond
+ * @LastEditTime: 2025-10-04 11:41:12
+ * @FilePath: src/main/java/me/eventually/hikarilib/world/LocationUtils.java
+ * @Description: This file is licensed under MIT license
+ */
 package me.eventually.hikarilib.world;
 
 import me.eventually.hikarilib.HikariLib;
@@ -18,7 +26,9 @@ public class LocationUtils {
     public static @Nullable Chunk getChunk(@NotNull Location location) {
         try {
             World world = location.getWorld();
-            if (world == null) return null;
+            if (world == null) {
+                return null;
+            }
             return world.getChunkAt(location);
         } catch (NullPointerException | IllegalArgumentException e) {
             return null;
@@ -31,8 +41,12 @@ public class LocationUtils {
     }
     public static @Nullable Location getChunkOffsetLocation(@NotNull Chunk chunk, int dx, int dy, int dz) {
         World world = chunk.getWorld();
-        if (dy < world.getMinHeight() || dy >= world.getMaxHeight()) return null;
-        if (dx < 0 || dx >= 16 || dz < 0 || dz >= 16) return null;
+        if (dy < world.getMinHeight() || dy >= world.getMaxHeight()) {
+            return null;
+        }
+        if (dx < 0 || dx >= 16 || dz < 0 || dz >= 16) {
+            return null;
+        }
         return chunk.getBlock(dx, dy, dz).getLocation();
     }
 
@@ -50,9 +64,9 @@ public class LocationUtils {
     public static boolean teleportPlayer(Player player, Location location, boolean async) {
         AtomicBoolean teleported = new AtomicBoolean(false);
         if (ServerEnvironment.isFolia()) {
-            player.getScheduler().run(HikariLib.getInstance(), (task) -> {
+            HikariLib.getInstance().getServer().getScheduler().runTaskAsynchronously(HikariLib.getInstance(), (task) -> {
                 player.teleportAsync(location).thenAccept(teleported::set);
-            }, () -> teleported.set(false));
+            });
         } else {
             if (async) {
                 player.teleportAsync(location).thenAccept(teleported::set);

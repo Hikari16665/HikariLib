@@ -1,3 +1,11 @@
+/**
+ * @Author: Eventually contact@hikari.bond
+ * @Date: 2025-05-28 22:39:22
+ * @LastEditors: Eventually contact@hikari.bond
+ * @LastEditTime: 2025-10-04 00:19:51
+ * @FilePath: src/main/java/me/eventually/hikarilib/tasks/HikariFoliaScheduler.java
+ * @Description: This file is licensed under MIT license
+ */
 package me.eventually.hikarilib.tasks;
 
 import io.papermc.paper.threadedregions.scheduler.AsyncScheduler;

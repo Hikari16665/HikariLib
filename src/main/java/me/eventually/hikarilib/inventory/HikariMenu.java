@@ -1,3 +1,11 @@
+/**
+ * @Author: Eventually contact@hikari.bond
+ * @Date: 2025-06-07 13:03:29
+ * @LastEditors: Eventually contact@hikari.bond
+ * @LastEditTime: 2025-10-04 00:19:50
+ * @FilePath: src/main/java/me/eventually/hikarilib/inventory/HikariMenu.java
+ * @Description: This file is licensed under MIT license
+ */
 package me.eventually.hikarilib.inventory;
 
 import lombok.Getter;
