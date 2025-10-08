@@ -13,5 +13,3 @@ steps:
       target: artifacts/
       patterns:
         - target/*.jar
-    when:
-      status: [ success ]
