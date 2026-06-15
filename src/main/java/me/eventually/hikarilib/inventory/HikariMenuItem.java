@@ -9,12 +9,21 @@
 package me.eventually.hikarilib.inventory;
 
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+/**
+ * 菜单物品栈的默认实现。
+ */
 public class HikariMenuItem implements HikariMenuItemStack {
     private ItemStack item;
     private HikariMenuClickHandler clickHandler;
 
-    public HikariMenuItem(ItemStack itemStack, HikariMenuClickHandler hikariMenuClickHandler) {
+    /**
+     * @param itemStack         物品栈
+     * @param hikariMenuClickHandler 点击处理器，可为 null
+     */
+    public HikariMenuItem(@NotNull ItemStack itemStack, @Nullable HikariMenuClickHandler hikariMenuClickHandler) {
         this.item = itemStack;
         this.clickHandler = hikariMenuClickHandler;
     }
@@ -30,12 +39,12 @@ public class HikariMenuItem implements HikariMenuItemStack {
     }
 
     @Override
-    public HikariMenuClickHandler getClickHandler() {
+    public @Nullable HikariMenuClickHandler getClickHandler() {
         return clickHandler;
     }
 
     @Override
-    public void setClickHandler(HikariMenuClickHandler clickHandler) {
+    public void setClickHandler(@Nullable HikariMenuClickHandler clickHandler) {
         this.clickHandler = clickHandler;
     }
 }

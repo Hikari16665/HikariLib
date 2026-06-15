@@ -14,16 +14,28 @@ import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * 位置与传送工具类。
+ */
 public class LocationUtils {
 
     private LocationUtils() {}
 
-    public static @Nullable Chunk getChunk(@NotNull Location location) {
+    /**
+     * 获取位置所在的区块，失败时返回 null。
+     *
+     * @param location 目标位置
+     * @return 所在区块，可能为 null
+     */
+    @Contract("null -> null; !null -> !null")
+    public static @Nullable Chunk getChunk(@Nullable Location location) {
+        if (location == null) return null;
         try {
             World world = location.getWorld();
             if (world == null) {
@@ -34,11 +46,31 @@ public class LocationUtils {
             return null;
         }
     }
+
+    /**
+     * 根据世界和坐标获取区块。
+     *
+     * @param world 目标世界
+     * @param x     区块 X 坐标
+     * @param z     区块 Z 坐标
+     * @return 对应的区块
+     */
     public static @NotNull Chunk getChunk(@NotNull World world, int x, int z) {
         int chunkX = x >> 4;
         int chunkZ = z >> 4;
         return world.getChunkAt(chunkX, chunkZ);
     }
+
+    /**
+     * 获取区块内的偏移位置。
+     *
+     * @param chunk 目标区块
+     * @param dx    区块内 X 偏移 (0-15)
+     * @param dy    Y 坐标
+     * @param dz    区块内 Z 偏移 (0-15)
+     * @return 对应位置，偏移越界或 Y 越界时返回 null
+     */
+    @Contract("_, _, _, _ -> new")
     public static @Nullable Location getChunkOffsetLocation(@NotNull Chunk chunk, int dx, int dy, int dz) {
         World world = chunk.getWorld();
         if (dy < world.getMinHeight() || dy >= world.getMaxHeight()) {
@@ -50,18 +82,27 @@ public class LocationUtils {
         return chunk.getBlock(dx, dy, dz).getLocation();
     }
 
-    public static boolean teleportPlayer(Player player, Location location) {
+    /**
+     * 传送玩家到指定位置（同步传送）。
+     *
+     * @param player   目标玩家
+     * @param location 目标位置
+     * @return 是否传送成功
+     */
+    public static boolean teleportPlayer(@NotNull Player player, @NotNull Location location) {
         return teleportPlayer(player, location, false);
     }
 
     /**
-     * Teleports a player to a location. Always async if Folia is used
-     * @param player the player to teleport
-     * @param location to teleport to
-     * @param async whether to teleport asynchronously
-     * @return true if the teleport was successful, false otherwise
+     * 传送玩家到指定位置。
+     * <p>在 Folia 服务端上强制异步传送；在 Bukkit 服务端上由 async 参数决定。</p>
+     *
+     * @param player   目标玩家
+     * @param location 目标位置
+     * @param async    是否异步传送（Bukkit 上有效，Folia 上忽略）
+     * @return 是否传送成功
      */
-    public static boolean teleportPlayer(Player player, Location location, boolean async) {
+    public static boolean teleportPlayer(@NotNull Player player, @NotNull Location location, boolean async) {
         AtomicBoolean teleported = new AtomicBoolean(false);
         if (ServerEnvironment.isFolia()) {
             HikariLib.getInstance().getServer().getScheduler().runTaskAsynchronously(HikariLib.getInstance(), (task) -> {

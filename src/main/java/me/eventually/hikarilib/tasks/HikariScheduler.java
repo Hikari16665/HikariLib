@@ -9,7 +9,20 @@
 package me.eventually.hikarilib.tasks;
 
 import me.eventually.hikarilib.server.ServerEnvironment;
+import org.jetbrains.annotations.NotNull;
 
+/**
+ * 调度器工具类，统一 Bukkit 和 Folia 的调度 API。
+ * <p>根据服务端类型自动选择对应的调度器实现。</p>
+ *
+ * <pre>{@code
+ * // 延迟 20 tick 后执行
+ * HikariScheduler.addTimedTask(20, () -> player.sendMessage("Hello"), false);
+ *
+ * // 每 20 tick 重复执行
+ * HikariScheduler.addRepeatingTask(20, () -> player.sendMessage("Tick"), false);
+ * }</pre>
+ */
 public class HikariScheduler {
     private static boolean initialized = false;
 
@@ -25,7 +38,7 @@ public class HikariScheduler {
         initialized = true;
     }
 
-    public static void addTimedTask(long delay, Runnable runnable,  boolean async) {
+    public static void addTimedTask(long delay, @NotNull Runnable runnable, boolean async) {
         if (ServerEnvironment.isFolia()) {
             HikariFoliaScheduler.addTimedTask(delay, runnable, async);
         } else {
@@ -33,7 +46,7 @@ public class HikariScheduler {
         }
     }
 
-    public static void addRepeatingTask(long period, Runnable runnable, boolean async) {
+    public static void addRepeatingTask(long period, @NotNull Runnable runnable, boolean async) {
         if (ServerEnvironment.isFolia()) {
             HikariFoliaScheduler.addRepeatingTask(period, runnable, async);
         } else {

@@ -9,26 +9,37 @@
 package me.eventually.hikarilib.reflection;
 
 import me.eventually.hikarilib.exception.ReflectionFailedException;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 /**
- * Utility class for reflection.
- * @author Eventually
+ * Java 反射工具类，提供便捷的反射操作封装。
+ *
+ * <pre>{@code
+ * // 设置私有静态字段
+ * ReflectionUtil.setStaticField(SomeClass.class, "fieldName", newValue);
+ *
+ * // 调用私有方法
+ * String result = ReflectionUtil.callMethod(String.class, obj, "methodName", arg1, arg2);
+ * }</pre>
  */
 @SuppressWarnings("unused")
 public class ReflectionUtil {
     private ReflectionUtil() {}
+
     /**
-     * Sets a static field in a class.
-     * @param clazz Target class.
-     * @param fieldName Target field name.
-     * @param value Value to set.
-     * @throws ReflectionFailedException throws when reflection fails.
+     * 设置类的静态字段值。
+     *
+     * @param clazz     目标类
+     * @param fieldName 字段名
+     * @param value     要设置的值，传 null 可将字段置为 null
+     * @throws ReflectionFailedException 反射操作失败时抛出
      */
-    public static void setStaticField(Class<?> clazz, String fieldName, Object value) throws ReflectionFailedException {
+    public static void setStaticField(@NotNull Class<?> clazz, @NotNull String fieldName, @Nullable Object value) throws ReflectionFailedException {
         try {
             Field field = clazz.getDeclaredField(fieldName);
             field.setAccessible(true);
@@ -38,13 +49,14 @@ public class ReflectionUtil {
         }
     }
     /**
-     * Sets a field in an object.
-     * @param object Target object.
-     * @param fieldName Target field name.
-     * @param value Object to set.
-     * @throws ReflectionFailedException throws when reflection fails.
+     * 设置对象的实例字段值。
+     *
+     * @param object    目标对象
+     * @param fieldName 字段名
+     * @param value     要设置的值，传 null 可将字段置为 null
+     * @throws ReflectionFailedException 反射操作失败时抛出
      */
-    public static void setField(Object object, String fieldName, Object value) throws ReflectionFailedException {
+    public static void setField(@NotNull Object object, @NotNull String fieldName, @Nullable Object value) throws ReflectionFailedException {
         try {
             Field field = object.getClass().getDeclaredField(fieldName);
             field.setAccessible(true);
@@ -54,13 +66,14 @@ public class ReflectionUtil {
         }
     }
     /**
-     * Gets a static field in a class.
-     * @param clazz Target class.
-     * @param fieldName Target field name.
-     * @return Value of the field.
-     * @throws ReflectionFailedException throws when reflection fails.
+     * 获取类的静态字段值。
+     *
+     * @param clazz     目标类
+     * @param fieldName 字段名
+     * @return 字段值，可能为 null
+     * @throws ReflectionFailedException 反射操作失败时抛出
      */
-    public static Object getStaticField(Class<?> clazz, String fieldName) throws ReflectionFailedException {
+    public static @Nullable Object getStaticField(@NotNull Class<?> clazz, @NotNull String fieldName) throws ReflectionFailedException {
         try {
             Field field = clazz.getDeclaredField(fieldName);
             field.setAccessible(true);
@@ -70,13 +83,14 @@ public class ReflectionUtil {
         }
     }
     /**
-     * Gets a field in an object.
-     * @param object Target object.
-     * @param fieldName Target field name.
-     * @return Value of the field.
-     * @throws ReflectionFailedException throws when reflection fails.
+     * 获取对象的实例字段值。
+     *
+     * @param object    目标对象
+     * @param fieldName 字段名
+     * @return 字段值，可能为 null
+     * @throws ReflectionFailedException 反射操作失败时抛出
      */
-    public static Object getField(Object object, String fieldName) throws ReflectionFailedException {
+    public static @Nullable Object getField(@NotNull Object object, @NotNull String fieldName) throws ReflectionFailedException {
         try {
             Field field = object.getClass().getDeclaredField(fieldName);
             field.setAccessible(true);
@@ -86,15 +100,17 @@ public class ReflectionUtil {
         }
     }
     /**
-     * Call a static method in a class.
-     * @param <T> Return type of the method.
-     * @param clazz Target class.
-     * @param methodName Target method name.
-     * @param args Arguments to pass to the method.
-     * @return The result of the method call, cast to type T.
-     * @throws ReflectionFailedException if reflection or type casting fails.
+     * 调用类的静态方法。
+     *
+     * @param returnType 返回值类型
+     * @param clazz      目标类
+     * @param methodName 方法名
+     * @param args       方法参数
+     * @param <T>        返回值类型
+     * @return 方法调用结果
+     * @throws ReflectionFailedException 反射操作或类型转换失败时抛出
      */
-    public static <T> T callStaticMethod(Class<T> returnType, Class<?> clazz, String methodName, Object... args) throws ReflectionFailedException {
+    public static <T> @Nullable T callStaticMethod(@NotNull Class<T> returnType, @NotNull Class<?> clazz, @NotNull String methodName, Object @NotNull ... args) throws ReflectionFailedException {
         try {
             Class<?>[] argClasses = new Class<?>[args.length];
             for (int i = 0; i < args.length; i++) {
@@ -111,15 +127,17 @@ public class ReflectionUtil {
         }
     }
     /**
-     * Call a method in an object.
-     * @param <T> Return type of the method.
-     * @param object Target object.
-     * @param methodName Target method name.
-     * @param args Arguments to pass to the method.
-     * @return The result of the method call, cast to type T.
-     * @throws ReflectionFailedException if reflection or type casting fails.
+     * 调用对象的实例方法。
+     *
+     * @param returnType 返回值类型
+     * @param object     目标对象
+     * @param methodName 方法名
+     * @param args       方法参数
+     * @param <T>        返回值类型
+     * @return 方法调用结果
+     * @throws ReflectionFailedException 反射操作或类型转换失败时抛出
      */
-    public static <T> T callMethod(Class<T> returnType, Object object, String methodName, Object... args) throws ReflectionFailedException {
+    public static <T> @Nullable T callMethod(@NotNull Class<T> returnType, @NotNull Object object, @NotNull String methodName, Object @NotNull ... args) throws ReflectionFailedException {
         try {
             Class<?>[] argClasses = new Class<?>[args.length];
             for (int i = 0; i < args.length; i++) {

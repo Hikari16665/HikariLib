@@ -17,7 +17,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.profile.PlayerProfile;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -27,8 +29,15 @@ import java.util.Optional;
 import java.util.function.Function;
 
 /**
- * Wrapper class for ItemStack
- * @author Eventually
+ * ItemStack 包装类，提供链式调用的物品构建 API。
+ *
+ * <pre>{@code
+ * HikariItemStack item = new HikariItemStack(Material.DIAMOND_SWORD)
+ *     .setName("&6传说之剑")
+ *     .setLore(List.of("&7一把传说中的剑", "&e攻击力 +10"))
+ *     .setCustomModelData(1001);
+ * player.getInventory().addItem(item.getItem());
+ * }</pre>
  */
 @Getter
 @SuppressWarnings("unused")
@@ -58,21 +67,21 @@ public class HikariItemStack {
     public ItemStack getItem() {
         return wrapped;
     }
-    public HikariItemStack setAmount(int amount) {
+    public @NotNull HikariItemStack setAmount(int amount) {
         wrapped.setAmount(amount);
         return this;
     }
-    public HikariItemStack setType(Material material) {
+    public @NotNull HikariItemStack setType(@NotNull Material material) {
         wrapped.setType(material);
         return this;
     }
-    public ItemMeta getItemMeta() {
+    public @Nullable ItemMeta getItemMeta() {
         return wrapped.getItemMeta();
     }
     public boolean hasItemMeta() {
         return wrapped.hasItemMeta();
     }
-    public Optional<List<String>> getLore() {
+    public @NotNull Optional<List<String>> getLore() {
         ItemMeta meta = wrapped.getItemMeta();
         if (meta == null) {
             return Optional.empty();
@@ -80,7 +89,7 @@ public class HikariItemStack {
         return Optional.ofNullable(meta.getLore());
     }
 
-    public List<? extends Component> getComponentLore() {
+    public @NotNull List<? extends Component> getComponentLore() {
         ItemMeta meta = wrapped.getItemMeta();
         if (meta == null) {
             return new ArrayList<>();
@@ -88,7 +97,7 @@ public class HikariItemStack {
         return meta.lore();
     }
 
-    HikariItemStack setComponentLore(List<? extends Component> lore) {
+    @NotNull HikariItemStack setComponentLore(@NotNull List<? extends Component> lore) {
         ItemMeta meta = wrapped.getItemMeta();
         if (meta == null) {
             return this;
@@ -98,7 +107,7 @@ public class HikariItemStack {
         return this;
     }
 
-    HikariItemStack setLore(List<String> lore) {
+    @NotNull HikariItemStack setLore(@NotNull List<String> lore) {
         ItemMeta meta = wrapped.getItemMeta();
         if (meta == null) {
             return this;
@@ -108,7 +117,7 @@ public class HikariItemStack {
         return this;
     }
 
-    public HikariItemStack removeLore() {
+    public @NotNull HikariItemStack removeLore() {
         ItemMeta meta = wrapped.getItemMeta();
         if (meta == null) {
             return this;
@@ -118,11 +127,11 @@ public class HikariItemStack {
         return this;
     }
 
-    public HikariItemStack setItemMeta(ItemMeta itemMeta) {
+    public @NotNull HikariItemStack setItemMeta(@NotNull ItemMeta itemMeta) {
         wrapped.setItemMeta(itemMeta);
         return this;
     }
-    public Optional<String> getName() {
+    public @NotNull Optional<String> getName() {
         ItemMeta meta = wrapped.getItemMeta();
         if (meta == null) {
             return Optional.empty();
@@ -130,7 +139,7 @@ public class HikariItemStack {
         return Optional.of(meta.getDisplayName());
     }
 
-    public Component getComponentName() {
+    public @NotNull Component getComponentName() {
         ItemMeta meta = wrapped.getItemMeta();
         if (meta == null) {
             return Component.empty();
@@ -138,32 +147,32 @@ public class HikariItemStack {
         return meta.displayName();
     }
 
-    public Optional<Integer> getCustomModelData() {
+    public @NotNull Optional<Integer> getCustomModelData() {
         ItemMeta meta = wrapped.getItemMeta();
         if (meta == null) {
             return Optional.empty();
         }
         return Optional.of(meta.getCustomModelData());
     }
-    public HikariItemStack setName(String name) {
+    public @NotNull HikariItemStack setName(@NotNull String name) {
         return editItemMeta(meta -> {
             meta.setDisplayName(name);
             return meta;
         });
     }
-    public HikariItemStack setComponentName(Component name) {
+    public @NotNull HikariItemStack setComponentName(@NotNull Component name) {
         return editItemMeta(meta -> {
             meta.displayName(name);
             return meta;
         });
     }
-    public HikariItemStack setCustomModelData(int data) {
+    public @NotNull HikariItemStack setCustomModelData(int data) {
         return editItemMeta(meta -> {
             meta.setCustomModelData(data);
             return meta;
         });
     }
-    public HikariItemStack editItemMeta(Function<ItemMeta, ItemMeta> function) {
+    public @NotNull HikariItemStack editItemMeta(@NotNull Function<ItemMeta, ItemMeta> function) {
         ItemMeta itemMeta = wrapped.getItemMeta();
         if (itemMeta == null) {
             return this;
@@ -171,13 +180,13 @@ public class HikariItemStack {
         wrapped.setItemMeta(function.apply(itemMeta));
         return this;
     }
-    public HikariItemStack editLore(Function<List<String>, List<String>> function) {
+    public @NotNull HikariItemStack editLore(@NotNull Function<List<String>, List<String>> function) {
         return editItemMeta(meta -> {
             meta.setLore(function.apply(meta.getLore()));
             return meta;
         });
     }
-    public HikariItemStack editComponentLore(Function<List<? extends Component>, List<? extends Component>> function) {
+    public @NotNull HikariItemStack editComponentLore(@NotNull Function<List<? extends Component>, List<? extends Component>> function) {
         return editItemMeta(meta -> {
             meta.lore(function.apply(meta.lore()));
             return meta;
@@ -227,7 +236,7 @@ public class HikariItemStack {
             return new HikariItemStack(material, amount).setName(name).setComponentLore(components);
         }
     }
-    public static HikariItemStack getSkull(String uuid, String name, List<String> lore) {
+    public static @NotNull HikariItemStack getSkull(@NotNull String uuid, @NotNull String name, @NotNull List<String> lore) {
         HikariItemStack stack = new Builder(Material.PLAYER_HEAD, 1, name, lore).build();
         SkullMeta meta = (SkullMeta) stack.getItemMeta();
         PlayerProfile profile = Bukkit.createProfile(SKULL_NAME);

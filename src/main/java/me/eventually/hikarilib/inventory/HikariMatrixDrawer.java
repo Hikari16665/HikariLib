@@ -9,52 +9,75 @@
 package me.eventually.hikarilib.inventory;
 
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 矩阵布局菜单绘制器，使用字符矩阵定义物品分布。
+ *
+ * <pre>{@code
+ * HikariMatrixDrawer drawer = new HikariMatrixDrawer(9)
+ *     .addLine("XXX  XXXX")
+ *     .addLine("  X  X  X")
+ *     .addExplain('X', new ItemStack(Material.STONE), (event, slot, menu) -> {
+ *         event.getWhoClicked().sendMessage("点击了物品！");
+ *     });
+ * }</pre>
+ */
 public class HikariMatrixDrawer implements HikariMenuDrawer {
     private final int size;
     private final Map<Character, ItemStack> characterMap = new HashMap<>();
     private final Map<Character, HikariMenuClickHandler> clickHandlerMap = new HashMap<>();
     private final List<String> matrix = new ArrayList<>();
 
+    /**
+     * @param size 矩阵每行的长度（即菜单列数，通常为 9）
+     */
     public HikariMatrixDrawer(int size) {
         this.size = size;
     }
-    public HikariMatrixDrawer addLine(String line) {
+    public @NotNull HikariMatrixDrawer addLine(@NotNull String line) {
         matrix.add(line);
         return this;
     }
-    public HikariMatrixDrawer addExplain(char c, ItemStack item) {
+    /**
+     * 添加字符到物品的映射。
+     */
+    public @NotNull HikariMatrixDrawer addExplain(char c, @NotNull ItemStack item) {
         characterMap.put(c, new ItemStack(item));
         return this;
     }
-    public HikariMatrixDrawer addExplain(String c, ItemStack item) {
+    public @NotNull HikariMatrixDrawer addExplain(@NotNull String c, @NotNull ItemStack item) {
         characterMap.put(c.charAt(0), new ItemStack(item));
         return this;
     }
-    public HikariMatrixDrawer addExplain(char c, ItemStack item, HikariMenuClickHandler clickHandler) {
+    /**
+     * 添加字符到物品 + 点击处理器的映射。
+     */
+    public @NotNull HikariMatrixDrawer addExplain(char c, @NotNull ItemStack item, @Nullable HikariMenuClickHandler clickHandler) {
         characterMap.put(c, new ItemStack(item));
         clickHandlerMap.put(c, clickHandler);
         return this;
     }
-    public HikariMatrixDrawer addExplain(String c, ItemStack item, HikariMenuClickHandler clickHandler) {
+    public @NotNull HikariMatrixDrawer addExplain(@NotNull String c, @NotNull ItemStack item, @Nullable HikariMenuClickHandler clickHandler) {
         characterMap.put(c.charAt(0), new ItemStack(item));
         clickHandlerMap.put(c.charAt(0), clickHandler);
         return this;
     }
-    public HikariMatrixDrawer addClickHandler(char c, HikariMenuClickHandler clickHandler) {
+    public @NotNull HikariMatrixDrawer addClickHandler(char c, @Nullable HikariMenuClickHandler clickHandler) {
         clickHandlerMap.put(c, clickHandler);
         return this;
     }
-    public HikariMatrixDrawer addClickHandler(String c, HikariMenuClickHandler clickHandler) {
+    public @NotNull HikariMatrixDrawer addClickHandler(@NotNull String c, @Nullable HikariMenuClickHandler clickHandler) {
         clickHandlerMap.put(c.charAt(0), clickHandler);
         return this;
     }
-    public int[] getCharPositions(String s) {
+    public int[] getCharPositions(@NotNull String s) {
         return getCharPositions(s.charAt(0));
     }
     public int[] getCharPositions(char c) {
@@ -102,32 +125,35 @@ public class HikariMatrixDrawer implements HikariMenuDrawer {
         private HikariMenuOpenHandler openHandler = HikariMenuOpenHandler.DEFAULT;
         private HikariMenuCloseHandler closeHandler = HikariMenuCloseHandler.DEFAULT;
 
-        public Builder withTitle(String title) {
+        public @NotNull Builder withTitle(@NotNull String title) {
             this.title = title;
             return this;
         }
 
-        public Builder withRows(int rows) {
+        public @NotNull Builder withRows(int rows) {
             this.rows = rows;
             return this;
         }
 
-        public Builder withDrawer(HikariMenuDrawer drawer) {
+        public @NotNull Builder withDrawer(@NotNull HikariMenuDrawer drawer) {
             this.drawer = drawer;
             return this;
         }
 
-        public Builder withOpenHandler(HikariMenuOpenHandler openHandler) {
+        public @NotNull Builder withOpenHandler(@Nullable HikariMenuOpenHandler openHandler) {
             this.openHandler = openHandler;
             return this;
         }
 
-        public Builder withCloseHandler(HikariMenuCloseHandler closeHandler) {
+        public @NotNull Builder withCloseHandler(@Nullable HikariMenuCloseHandler closeHandler) {
             this.closeHandler = closeHandler;
             return this;
         }
 
-        public HikariMenu build() {
+        /**
+         * 构建菜单实例。
+         */
+        public @NotNull HikariMenu build() {
             return new HikariMenu(title, rows, openHandler, closeHandler, drawer);
         }
     }

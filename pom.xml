@@ -62,9 +62,8 @@
 
     <repositories>
         <repository>
-            <id>hikari-repository-mirrors</id>
-            <name>Hikari Repository</name>
-            <url>https://repo.hrproject.cn/mirrors</url>
+            <id>papermc</id>
+            <url>https://repo.papermc.io/repository/maven-public/</url>
         </repository>
     </repositories>
 

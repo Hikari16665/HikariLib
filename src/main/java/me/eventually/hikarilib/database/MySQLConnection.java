@@ -11,6 +11,7 @@ package me.eventually.hikarilib.database;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -19,21 +20,29 @@ import java.util.List;
 import java.util.concurrent.Callable;
 
 /**
- * A wrapped class for database connection.
- * Use {@link #getDataSource()} to get the datasource, and you can use it to do anything you want
- * @author Eventually
+ * MySQL 数据库连接实现，基于 HikariCP 连接池。
+ *
+ * <pre>{@code
+ * MySQLConnection db = new MySQLConnection("localhost", 3306, "mydb", "root", "password", false);
+ * List<Object[]> rows = db.query("SELECT * FROM users WHERE age > ?", 18);
+ * }</pre>
  */
 @Getter
 public class MySQLConnection implements DataBaseConnection {
-    /**
-     * -- GETTER --
-     *  Get the datasource, and you can use it to do anything you want
-     *
-     */
     private final HikariDataSource dataSource;
 
-    public MySQLConnection(String host, int port, String database,
-                           String username, String password, boolean useSSL) {
+    /**
+     * 创建 MySQL 连接。
+     *
+     * @param host     数据库主机地址
+     * @param port     数据库端口
+     * @param database 数据库名
+     * @param username 用户名
+     * @param password 密码
+     * @param useSSL   是否启用 SSL
+     */
+    public MySQLConnection(@NotNull String host, int port, @NotNull String database,
+                           @NotNull String username, @NotNull String password, boolean useSSL) {
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl("jdbc:mysql://" + host + ":" + port + "/" + database +
                 "?useSSL=" + useSSL);
@@ -46,14 +55,15 @@ public class MySQLConnection implements DataBaseConnection {
 
 
     /**
-     * Common query method
-     * @param sql SQL query command
-     * @param params SQL query parameters
-     * @return Query result
-     * @throws SQLException handle it yourself
+     * 执行 SQL 查询。
+     *
+     * @param sql    SQL 查询语句
+     * @param params 查询参数
+     * @return 查询结果
+     * @throws SQLException 数据库异常时抛出
      */
     @Override
-    public List<Object[]> query(String sql, Object... params) throws SQLException {
+    public List<Object[]> query(@NotNull String sql, Object... params) throws SQLException {
         try (Connection conn = dataSource.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
@@ -76,14 +86,15 @@ public class MySQLConnection implements DataBaseConnection {
     }
 
     /**
-     * Common sql command execute method
-     * @param sql SQL command
-     * @param params SQL command parameters
-     * @return rows affected, 0 means no change
-     * @throws SQLException handle it yourself
+     * 执行 SQL 写操作。
+     *
+     * @param sql    SQL 语句
+     * @param params 参数
+     * @return 受影响的行数
+     * @throws SQLException 数据库异常时抛出
      */
     @Override
-    public int execute(String sql, Object... params) throws SQLException {
+    public int execute(@NotNull String sql, Object... params) throws SQLException {
         try (Connection conn = dataSource.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
@@ -93,39 +104,43 @@ public class MySQLConnection implements DataBaseConnection {
     }
 
     /**
-     * Fast way to select data
-     * @param tableName table name
-     * @param whereClause sql where clause, like "id = ?"
-     * @param params parameters for where clause
-     * @return query result
-     * @throws SQLException handle it yourself
+     * 快速查询。
+     *
+     * @param tableName   表名
+     * @param whereClause WHERE 子句
+     * @param params      参数
+     * @return 查询结果
+     * @throws SQLException 数据库异常时抛出
      */
     @Override
-    public List<Object[]> select(String tableName, String whereClause, Object... params) throws SQLException {
+    public List<Object[]> select(@NotNull String tableName, @NotNull String whereClause, Object... params) throws SQLException {
         return query("SELECT * FROM " + tableName + " WHERE " + whereClause, params);
     }
 
     /**
-     * Fast way to insert data
-     * @param tableName table name
-     * @param values values to insert
-     * @return rows affected
-     * @throws SQLException handle
+     * 快速插入。
+     *
+     * @param tableName 表名
+     * @param values    插入的值
+     * @return 受影响的行数
+     * @throws SQLException 数据库异常时抛出
      */
     @Override
-    public int insert(String tableName, Object... values) throws SQLException {
+    public int insert(@NotNull String tableName, Object... values) throws SQLException {
         String placeholders = String.join(",",
                 Collections.nCopies(values.length, "?"));
         return execute("INSERT INTO " + tableName + " VALUES(" + placeholders + ")", values);
     }
 
     /**
-     * Fast way to do transaction
-     * @param task task to run
-     * @throws SQLException
+     * 执行事务。
+     *
+     * @param task 事务任务
+     * @return 事务任务的返回值
+     * @throws SQLException 事务失败时抛出，自动回滚
      */
     @Override
-    public <T> T transaction(Callable<T> task) throws SQLException {
+    public <T> T transaction(@NotNull Callable<T> task) throws SQLException {
         try (Connection conn = dataSource.getConnection()) {
             conn.setAutoCommit(false);
             try {
