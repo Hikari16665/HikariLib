@@ -14,6 +14,7 @@ import lombok.Setter;
 import me.eventually.hikarilib.HikariLib;
 import org.bukkit.Server;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * 服务器环境检测工具类。
